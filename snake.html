@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      .gezi{border-collapse: collapse;border: 1px solid #cccccc;margin: 0 auto;}
+      td{width: 10px;height: 10px;border: 1px solid black;}
+      .red{background: red;}
+      .bai{background: white;}
+      .hei{background: black;}
+
+    </style>
+  </head>
+  <body onkeydown="key(event)">
+   <table id="gezi" class="gezi">
+
+   </table>
+  <table style="border-collapse:collapse;">
+    <tr>
+      <td>
+        <input type="button" name="name" value="开始" onclick="start()">
+      </td>
+      <td>
+        <input id='mark' type="button" name="name" value="0">
+      </td>
+    </tr>
+  </table>
+
+
+   <script type="text/javascript">
+   var wh=30;
+   var mapTble=document.getElementById('gezi');
+   var bigArr = new Array();
+   var she =new Array();
+   var l=3;
+   var x=0;
+   var y=l-1;
+   var dir =1;//右下左上
+   var n;
+   var m;
+   var mark=0;
+   var clock=null;
+   var sudu=250;
+
+   window.onload=function(){
+     for (var i = 0; i < wh; i++) {
+       var tr =document.createElement('tr');
+       var trs = new Array();
+       for (var j = 0; j < wh; j++) {
+         var td =document.createElement('td');
+         tr.appendChild(td);
+         trs[j]=td
+       }
+       mapTble.appendChild(tr);
+       bigArr[i]=trs
+     }
+    for (var g = 0; g <l; g++) {
+      she[g]=bigArr[0][g];
+      she[g].className='red';
+    }
+    food();
+   }
+
+
+   function sheyin(obj){
+     obj[0].className='bai';
+   }
+   function shexian(obj){
+     obj[obj.length-1].className='red';
+   }
+
+   function chi(obj){
+     var shifou=true;
+     for (var i = 0; i < she.length; i++) {
+       if (she[i]==obj) {
+         shifou=false;
+       }
+     }
+     return shifou
+   }
+
+   function stop(){
+     if (clock!=null) {
+       clearTimeout(clock);
+     }
+   }
+
+   function start(){
+     if (dir==1) {
+        if (y+1<wh) {
+           if (chi(bigArr[x][y+1])) {
+             sheyin(she);
+             if (x==n&&y+1==m) {
+                extent();
+             }else {
+               for (var o= 0; o <she.length-1; o++) {
+                 she[o] = she[o+1]
+               }
+               she[l-1]=bigArr[x][y+1];
+             }
+             y+=1;
+             shexian(she);
+             clock=setTimeout('start()',sudu)
+           }else {
+             stop();
+             alert('game over')
+           }
+        }else {
+          stop();
+          alert('game over')
+        }
+     }
+     if (dir==2) {
+       if (x+1<wh) {
+            if (chi(bigArr[x+1][y])) {
+              sheyin(she);
+              if (x+1==n&&y==m) {
+                extent();
+              }else {
+                for (var o = 0; o < she.length-1; o++) {
+                  she[o]=she[o+1]
+                }
+                she[l-1]=bigArr[x+1][y];
+              }
+              x+=1;
+              shexian(she);
+              clock=setTimeout('start()',sudu)
+            }else {
+              stop();
+              alert('game over')
+            }
+       }else {
+         stop();
+         alert('game voer');
+       }
+     }
+     if (dir==3) {
+        if (y>0) {
+           if (chi(bigArr[x][y-1])) {
+             sheyin(she);
+             if (x==n&&y-1==m) {
+               extent();
+             }else {
+               for (var o= 0; o <she.length-1; o++) {
+                 she[o]=she[o+1]
+               }
+               she[l-1]=bigArr[x][y-1];
+             }
+             y-=1;
+             shexian (she);
+             clock=setTimeout('start()',sudu)
+           }else {
+             stop();
+             alert('game over');
+           }
+        }else {
+          stop();
+          alert('game over');
+        }
+     }
+     if (dir==4) {
+        if (x>0) {
+           if (chi(bigArr[x-1][y])) {
+             sheyin (she);
+             if (x-1==n&&y==m) {
+               extent()
+             }else {
+               for (var o = 0; o <she.length-1; o++) {
+                 she[o]=she[o+1]
+               }
+               she[l-1]=bigArr[x-1][y];
+             }
+             x-=1;
+             shexian(she);
+             clock=setTimeout('start()',sudu)
+           }else {
+             stop();
+             alert('game over')
+           }
+        }else {
+          stop()
+          alert('game over')
+        }
+     }
+
+   }
+
+
+   function food(){
+     n =Math.floor(Math.random()*wh);
+     m =Math.floor(Math.random()*wh);
+     bigArr[n][m].className='hei';
+     for (var i = 0; i < she.length; i++) {
+        if (she[i]==bigArr[n][m]) {
+          food()
+        }
+     }
+   }
+
+   function extent(){
+     she[she.length]=bigArr[n][m];
+     l+=1;
+     mark+=1;
+     document.getElementById('mark').value=mark;
+     food()
+   }
+   function key(event){
+     if (event.keyCode==39) {
+       dir=1;
+     }
+     if (event.keyCode==40) {
+       dir=2;
+     }
+     if (event.keyCode==37) {
+       dir=3;
+     }
+     if (event.keyCode==38) {
+       dir=4;
+     }
+   }
+
+   </script>
+  </body>
+</html>
